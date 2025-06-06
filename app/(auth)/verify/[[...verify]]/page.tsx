@@ -16,6 +16,7 @@ export default function VerifyPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
+  const from = searchParams.get("from"); // Check if coming from forgot-password
 
   // Redirect to /login if email is missing
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function VerifyPage() {
   }, [timer]);
 
   // Log to confirm route is hit
-  console.log("Verify page loaded with email:", email);
+  console.log("Verify page loaded with email:", email, "from:", from);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,11 +49,16 @@ export default function VerifyPage() {
 
     try {
       console.log("Submitting OTP:", value, "for email:", email);
-      // Mock OTP verification: accept any 6-digit OTP for testing
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
       if (value === "123456") { // Mock OTP for testing
-        console.log("User logged in with email:", email);
-        router.push("/dashboard");
+        console.log("OTP verified for email:", email);
+        // Redirect based on where the user came from
+        if (from === "forgot-password") {
+          router.push(`/reset?email=${encodeURIComponent(email || "")}`);
+        } else {
+          console.log("User logged in with email:", email);
+          router.push("/dashboard");
+        }
       } else {
         throw new Error("Invalid OTP");
       }
@@ -131,7 +137,7 @@ export default function VerifyPage() {
           type="submit"
           className={`w-full py-2 rounded-lg transition-colors duration-200 ${
             value.length > 0 && !isLoading
-              ? "bg-red-600 hover:bg-red-700 text-white"
+              ? " hover:bg-red-700 text-white"
               : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
           }`}
           disabled={value.length !== 6 || isLoading}

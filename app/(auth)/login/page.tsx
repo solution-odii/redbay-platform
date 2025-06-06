@@ -128,7 +128,7 @@ export default function LoginPage() {
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="text-right">
-            <Link href="/auth/forgot-password" className="text-sm text-red-600 hover:underline">
+            <Link href="/forgot" className="text-sm text-[#C80000] hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -136,7 +136,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           className={`w-full py-2 rounded-lg transition-colors duration-200 ${
-            email && !isLoading ? "bg-red-600 hover:bg-red-700 text-white" : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
+            email && !isLoading ? " hover:bg-red-700 text-white" : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
           }`}
           disabled={!email || isLoading}
         >
