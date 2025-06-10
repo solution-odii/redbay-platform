@@ -101,13 +101,13 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
         onClick={onClose}
       />
       <div
-        className="h-full w-[45%] bg-card shadow-lg overflow-x-auto transform transition-transform duration-300 ease-in-out rounded-xl"
+        className="h-full w-[45%] bg-background shadow-lg overflow-x-auto transform transition-transform duration-300 ease-in-out rounded-xl"
         style={{ transform: isOpen ? "translateX(0)" : "translateX(100%)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-full p-6 overflow-y-auto">
           {/* Header */}
-          <div className="flex justify-between items-center border-b border-[#F8F8F8]">
+          <div className="flex justify-between items-center border-b border-[#F8F8F8] dark:border-[#2A2A2A]">
             <div className="flex flex-col gap-0">
               <h2 className="text-sm font-semibold">Payout Details</h2>
               <p className="text-xs text-gray-500 mb-4">Get complete oversight on platform operations</p>
@@ -118,7 +118,7 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
               </Button>
             </div>
           </div>
-          <div className="flex justify-between border-b border-[#F8F8F8] py-3">
+          <div className="flex justify-between border-b border-[#F8F8F8] dark:border-[#2A2A2A] py-3">
             <span className="text-red-500 font-medium text-sm">Transaction Reference: <span className="text-primary text-sm font-light">{payout.transactionReference}</span></span>
             <div className="flex space-x-2">
               <Button variant="ghost" size="icon" onClick={handlePrev} disabled={!prevPayout}>
@@ -132,7 +132,7 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
           {/* Summary Section */}
           <div className="space-y-4 py-3">
             <h3 className="text-xs text-gray-500">Summary Section</h3>
-            <div className="flex items-center justify-between space-x-1 pb-5 border-b border-[#F8F8F8]">
+            <div className="flex items-center justify-between space-x-1 pb-5 border-b border-[#F8F8F8] dark:border-[#2A2A2A]">
               <div className="flex items-center gap-2">
                 <Avatar className="w-13 h-13">
                   <AvatarImage src="/placeholder-avatar.jpg" alt={payout.merchant} />
@@ -147,7 +147,7 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
                 <Button className="hover:bg-red-600 ml-auto">View Profile</Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="bg-[#F5F5F5] dark:bg-background rounded-sm">
+                    <Button variant="ghost" className="bg-[#F5F5F5] dark:bg-card rounded-sm">
                       <BsThreeDots />
                     </Button>
                   </DropdownMenuTrigger>
@@ -161,7 +161,7 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
                 </DropdownMenu>
               </div>
             </div>
-            <div className="flex justify-between text-sm border-b border-[#F8F8F8] pb-1">
+            <div className="flex justify-between text-sm border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-1">
               <div className="flex flex-col gap-2"><span className="text-xs text-gray-500">Source Account</span><span>{payout.sourceAccount}</span></div>
               <div className="flex flex-col gap-2"><span className="text-xs text-gray-500">Amount</span><span>₦{payout.amount.toLocaleString()}</span></div>
               <div className="flex flex-col gap-2"><span className="text-xs text-gray-500">Destination Account</span><span>{payout.destinationAccount}</span></div>
@@ -172,27 +172,27 @@ export default function PayoutDetailsModal({ isOpen, onClose, payout, setSelecte
           <div className="space-y-4">
             <h3 className="text-xs text-gray-500">Transaction Details</h3>
             <div className="flex flex-col gap-4 text-sm">
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Timestamp:</p><span>{payout.timestamp}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Session ID:</p><span>{payout.sessionID}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Reference:</p><span>{payout.reference}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Webhook Status:</p><span>{payout.webhookStatus}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Transaction Type:</p><span>{payout.transactionType}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Timestamp:</p><span>{payout.timestamp}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Session ID:</p><span>{payout.sessionID}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Reference:</p><span>{payout.reference}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Webhook Status:</p><span>{payout.webhookStatus}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Transaction Type:</p><span>{payout.transactionType}</span></span>
             </div>
           </div>
           {/* Additional Metadata */}
           <div className="space-y-4">
             <h3 className="text-xs text-gray-500">Additional Metadata</h3>
             <div className="flex flex-col gap-4 text-sm">
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">IP Address:</p><span>{payout.ipAddress}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Device Info:</p><span>{payout.deviceInfo}</span></span>
-              <span className="flex gap-2 border-b border-[#F8F8F8] pb-2"><p className="font-medium">Processing Time:</p><span>{payout.processingTime}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">IP Address:</p><span>{payout.ipAddress}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Device Info:</p><span>{payout.deviceInfo}</span></span>
+              <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] pb-2"><p className="font-medium">Processing Time:</p><span>{payout.processingTime}</span></span>
             </div>
           </div>
           {/* Footer */}
           <div className="space-y-4 pt-6">
             <h3 className="text-xs text-gray-500">Footer</h3>
             <div>
-            <span className="flex gap-2 border-b border-[#F8F8F8] text-sm pb-2"><p className="font-medium">Last Updated:</p><span>{payout.lastUpdated}</span></span>
+            <span className="flex gap-2 border-b border-[#F8F8F8] dark:border-[#2A2A2A] text-sm pb-2"><p className="font-medium">Last Updated:</p><span>{payout.lastUpdated}</span></span>
 
             </div>
           </div>
