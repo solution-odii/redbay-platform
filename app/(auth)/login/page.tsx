@@ -38,14 +38,20 @@ export default function LoginPage() {
     }
     setError("");
     setIsLoading(true);
-
+  
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (email === "cakpomughe@gmail.com" && password === "11111111") {
-        console.log("Submitting login:", { email, password });
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await res.json();
+      console.log("Login response:", data); // Debug log
+      if (res.ok && data.success) {
         router.push(`/verify?email=${encodeURIComponent(email)}`);
       } else {
-        throw new Error("Invalid email or password");
+        setError(data.error || "Login failed");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed. Please try again.");
@@ -53,7 +59,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -77,7 +82,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setEmailFocused(true)}
               onBlur={() => setEmailFocused(false)}
-              className="w-full h-14 bg-[#F8F8F8] border-0 pl-10 pr-4 rounded-lg focus:ring-2  transition-all duration-200 flex items-center"
+              className="w-full h-14 bg-[#F8F8F8] border-0 pl-10 pr-4 rounded-lg focus:ring-2 transition-all duration-200 flex items-center"
             />
             <label
               htmlFor="email"
@@ -103,7 +108,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
-              className="w-full h-14 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2  transition-all duration-200 flex items-center"
+              className="w-full h-14 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2 transition-all duration-200 flex items-center"
             />
             <label
               htmlFor="password"
@@ -136,7 +141,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           className={`w-full py-2 rounded-lg transition-colors duration-200 ${
-            email && !isLoading ? " hover:bg-red-700 text-white" : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
+            email && !isLoading ? "bg-[#C80000] hover:bg-[#A60000] text-white" : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
           }`}
           disabled={!email || isLoading}
         >

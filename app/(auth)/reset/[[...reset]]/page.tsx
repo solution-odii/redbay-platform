@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -21,7 +20,7 @@ export default function ResetPasswordPage() {
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const email = searchParams.get("email");
+  const token = searchParams.get("token");
 
   // Password validation states
   const [hasLength, setHasLength] = useState(false);
@@ -30,12 +29,12 @@ export default function ResetPasswordPage() {
   const [hasNumber, setHasNumber] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
 
-  // Redirect to /login if email is missing
-//   useEffect(() => {
-//     if (!email) {
-//       router.push("/login");
-//     }
-//   }, [email, router]);
+  // Redirect to /login if token is missing
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+    }
+  }, [token, router]);
 
   // Validate password rules on change
   useEffect(() => {
@@ -72,29 +71,38 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      console.log("Password reset for email:", email, "New password:", password);
-      alert("Password reset successfully!");
-      router.push("/login"); // Redirect to login page
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPassword: password, confirmPassword, token }),
+      });
+
+      const data = await res.json();
+      console.log("Reset password response:", JSON.stringify(data, null, 2)); // Debug log
+      if (res.ok && data.success) {
+        alert("Password reset successfully!"); // Replace with toast
+        router.push("/login");
+      } else {
+        setError(data.error || "Failed to reset password");
+      }
     } catch (err) {
       setError("Failed to reset password. Please try again.");
-      console.log(err)
+      console.error("Reset password error:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // If email is missing, render nothing while redirecting
-//   if (!email) {
-//     return null;
-//   }
+  if (!token) {
+    return null;
+  }
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6 p-6">
       <div className="flex flex-col items-center space-y-4">
-        <Logo  />
+        <Logo />
         <h1 className="text-2xl font-semibold text-primary">Reset Password</h1>
-        <p className="text-sm text-center">Enter your new password for {email}</p>
+        <p className="text-sm text-center">Enter your new password</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
@@ -109,7 +117,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
-              className="w-full h-12 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2  transition-all duration-200 flex items-center"
+              className="w-full h-12 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2 transition-all duration-200 flex items-center"
             />
             <label
               htmlFor="password"
@@ -143,7 +151,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               onFocus={() => setConfirmPasswordFocused(true)}
               onBlur={() => setConfirmPasswordFocused(false)}
-              className="w-full h-12 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2  transition-all duration-200 flex items-center"
+              className="w-full h-12 bg-[#F8F8F8] border-0 pl-10 pr-10 rounded-lg focus:ring-2 transition-all duration-200 flex items-center"
             />
             <label
               htmlFor="confirm-password"
@@ -168,25 +176,25 @@ export default function ResetPasswordPage() {
           </div>
         </div>
         <div className="space-y-2">
-            <div className="flex gap-2">
-          <div className={`flex items-center space-x-2 p-1 rounded-full ${hasLength ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
-            {hasLength ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-            <span className="text-xs">min 8 characters</span>
-          </div>
-          <div className={`flex items-center space-x-2 p-1 rounded-full ${hasUppercase ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
-            {hasUppercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-            <span className="text-xs">at least 1 uppercase letter</span>
-          </div>
+          <div className="flex gap-2">
+            <div className={`flex items-center space-x-2 p-1 rounded-full ${hasLength ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
+              {hasLength ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+              <span className="text-xs">min 8 characters</span>
+            </div>
+            <div className={`flex items-center space-x-2 p-1 rounded-full ${hasUppercase ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
+              {hasUppercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+              <span className="text-xs">at least 1 uppercase letter</span>
+            </div>
           </div>
           <div className="flex gap-2">
-          <div className={`flex items-center space-x-2 p-1 rounded-full ${hasLowercase ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
-            {hasLowercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-            <span className="text-xs">at least 1 lowercase letter</span>
-          </div>
-          <div className={`flex items-center space-x-2 p-1 rounded-full ${hasNumber ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
-            {hasNumber ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-            <span className="text-xs">at least 1 number</span>
-          </div>
+            <div className={`flex items-center space-x-2 p-1 rounded-full ${hasLowercase ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
+              {hasLowercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+              <span className="text-xs">at least 1 lowercase letter</span>
+            </div>
+            <div className={`flex items-center space-x-2 p-1 rounded-full ${hasNumber ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
+              {hasNumber ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+              <span className="text-xs">at least 1 number</span>
+            </div>
           </div>
           <div className={`flex items-center space-x-2 p-1 rounded-full w-[50%] ${hasSpecialChar ? "bg-[#C80000] text-white" : "bg-gray-100 text-gray-600"}`}>
             {hasSpecialChar ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -198,7 +206,7 @@ export default function ResetPasswordPage() {
           type="submit"
           className={`w-full py-2 rounded-lg transition-colors duration-200 ${
             password && confirmPassword && !isLoading
-              ? " hover:bg-red-700 text-white"
+              ? "bg-[#C80000] hover:bg-red-700 text-white"
               : "bg-[#F8F8F8] hover:bg-gray-300 text-gray-600"
           }`}
           disabled={!password || !confirmPassword || isLoading}

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -11,21 +10,19 @@ export default function VerifyPage() {
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [timer, setTimer] = useState(4);
+  const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
-  const from = searchParams.get("from"); // Check if coming from forgot-password
+  const from = searchParams.get("from");
 
-  // Redirect to /login if email is missing
   useEffect(() => {
     if (!email) {
       router.push("/login");
     }
   }, [email, router]);
 
-  // Handle the countdown timer for resend
   useEffect(() => {
     if (timer > 0) {
       const countdown = setTimeout(() => setTimer(timer - 1), 1000);
@@ -34,9 +31,6 @@ export default function VerifyPage() {
       setCanResend(true);
     }
   }, [timer]);
-
-  // Log to confirm route is hit
-  console.log("Verify page loaded with email:", email, "from:", from);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,23 +42,23 @@ export default function VerifyPage() {
     setIsLoading(true);
 
     try {
-      console.log("Submitting OTP:", value, "for email:", email);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
-      if (value === "123456") { // Mock OTP for testing
-        console.log("OTP verified for email:", email);
-        // Redirect based on where the user came from
-        if (from === "forgot-password") {
-          router.push(`/reset?email=${encodeURIComponent(email || "")}`);
-        } else {
-          console.log("User logged in with email:", email);
-          router.push("/dashboard");
-        }
+      console.log("Sending OTP:", value, "From:", from); // Debug log
+      const url = `/api/auth/verify?otp=${encodeURIComponent(value)}&from=${encodeURIComponent(from || "")}`;
+      console.log("Fetching URL:", url); // Debug log
+      const res = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      console.log("API response:", data); // Debug log
+      if (res.ok && data.success) {
+        router.push(data.redirect || "/dashboard");
       } else {
-        throw new Error("Invalid OTP");
+        setError(data.error || "Invalid OTP. Please try again.");
       }
     } catch (err) {
-      setError("Invalid OTP. Please try again.");
-      console.log("Error verifying OTP:", err);
+      setError(err instanceof Error ? err.message : "Verification failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -72,21 +66,32 @@ export default function VerifyPage() {
 
   const handleResend = async () => {
     setCanResend(false);
-    setTimer(4);
+    setTimer(60);
     setIsLoading(true);
 
     try {
-      console.log("Resending OTP to:", email);
-      alert("New OTP sent to " + email);
+      console.log("Resending OTP for email:", email); // Debug log
+      const res = await fetch("/api/auth/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      console.log("Resend OTP response:", data); // Debug log
+      if (res.ok && data.success) {
+        alert("New OTP sent to " + email); // Replace with toast
+      } else {
+        setError(data.error || "Failed to resend OTP");
+      }
     } catch (err) {
       setError("Failed to resend OTP. Please try again.");
-      console.log("Error resending OTP:", err);
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // If email is missing, render nothing while redirecting
   if (!email) {
     return null;
   }
@@ -96,14 +101,17 @@ export default function VerifyPage() {
       <div className="flex flex-col items-center space-y-4">
         <Logo />
         <h1 className="text-2xl font-semibold text-primary">Verify it&apos;s you</h1>
-        <p className="text-xs font-light">Enter 6-digit OTP code sent to {email}</p>
+        <p className="text-xs font-light">Enter 6-digit OTP code sent to {email}. It’s valid for 5 minutes.</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-4 flex flex-col items-center justify-center">
           <InputOTP
             maxLength={6}
             value={value}
-            onChange={(value) => setValue(value)}
+            onChange={(value) => {
+              console.log("OTP input:", value); // Debug log
+              setValue(value);
+            }}
             disabled={isLoading}
           >
             <InputOTPGroup className="gap-3">
@@ -137,12 +145,12 @@ export default function VerifyPage() {
           type="submit"
           className={`w-full py-2 rounded-lg transition-colors duration-200 ${
             value.length > 0 && !isLoading
-              ? " hover:bg-red-700 text-white"
+              ? "bg-[#C80000] hover:bg-[#A60000] text-white"
               : "bg-[#F8F8F8] hover:bg-gray-400 text-gray-600"
           }`}
           disabled={value.length !== 6 || isLoading}
         >
-          {isLoading ? "Verifying..." : "verify"}
+          {isLoading ? "Verifying..." : "Verify"}
         </Button>
       </form>
     </div>
