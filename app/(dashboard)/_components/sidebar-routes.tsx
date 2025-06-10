@@ -32,7 +32,7 @@ const adminRoutes: Route[] = [
   { icon: Merchant, label: "Merchant", href: "/merchant" },
   { icon: Settlements, label: "Settlements", href: "/settlements" },
   { icon: Payouts, label: "Payouts", href: "/payouts" },
-  { icon: Api, label: "API Docs", href: "/docs" },
+  { icon: Api, label: "API Logs", href: "/logs" },
   { icon: Users, label: "Users", href: "/users" },
   { icon: Audit, label: "Audit Trails", href: "/audit" },
 ];

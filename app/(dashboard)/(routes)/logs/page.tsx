@@ -1,27 +1,24 @@
-
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { payoutsData } from "@/lib/MockData";
+import { apiLogsData } from "@/lib/MockData";
+import { ApiLogsTable } from "./_components/ApiLogsTable";
 import { Card, CardContent } from "@/components/ui/card";
 import { ExportModal } from "../dashboard/_components/ExportModal";
-import { PayoutTable } from "./_components/PayoutsTable";
 
-export default function PayoutPage() {
+export default function ApiLogsPage() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Define field options based on table columns
   const fieldOptions = [
     { label: "S/N", value: "sN" },
-    { label: "Merchant", value: "merchant" },
-    { label: "Source Account", value: "sourceAccount" },
-    { label: "Destination Account", value: "destinationAccount" },
-    { label: "Amount", value: "amount" },
-    { label: "Status", value: "status" },
-    { label: "Transaction Ref", value: "transactionRef" },
-    { label: "Payment Ref", value: "paymentRef" },
+    { label: "Merchant Code", value: "merchantCode" },
+    { label: "Request Timestamp", value: "requestTimestamp" },
+    { label: "Response Timestamp", value: "responseTimestamp" },
+    { label: "Service", value: "service" },
+    { label: "Response Status", value: "responseStatus" },
     { label: "Timestamp", value: "timestamp" },
     { label: "Action", value: "action" },
   ];
@@ -32,7 +29,7 @@ export default function PayoutPage() {
     format: string;
     fields: Record<string, boolean>;
   }) => {
-    const exportData = payoutsData
+    const exportData = apiLogsData
       .filter((item) => {
         const fromDate = new Date(data.dateRangeFrom);
         const toDate = new Date(data.dateRangeTo);
@@ -48,8 +45,8 @@ export default function PayoutPage() {
     console.log("Export data:", { ...data, exportData });
     // const today = new Date();
     // const formattedDate = today.toISOString().split("T")[0].replace(/-/g, ""); // 20250610
-    // const formattedTime = today.toTimeString().split(" ")[0].replace(/:/g, ""); // 0525
-    // const filename = `Payouts_${formattedDate}_${formattedTime}.csv`;
+    // const formattedTime = today.toTimeString().split(" ")[0].replace(/:/g, ""); // 0605
+    // const filename = `ApiLogs_${formattedDate}_${formattedTime}.csv`;
     setIsExportModalOpen(false);
   };
 
@@ -57,7 +54,7 @@ export default function PayoutPage() {
     <div className="min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-sm font-medium">Payouts</h1>
+        <h1 className="text-sm font-medium">API Logs</h1>
         <Button
           onClick={() => setIsExportModalOpen(true)}
           className="hover:bg-[#A60000] rounded-md"
@@ -67,10 +64,10 @@ export default function PayoutPage() {
         </Button>
       </div>
 
-      {/* Payout Table */}
+      {/* API Logs Table */}
       <Card>
         <CardContent>
-          <PayoutTable />
+          <ApiLogsTable />
         </CardContent>
       </Card>
 

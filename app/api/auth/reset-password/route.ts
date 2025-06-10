@@ -10,26 +10,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Passwords do not match" }, { status: 400 });
     }
 
-    // Verify token with /api/v1/redtech/auth/verify-email
-    const verifyUrl = `https://redcollection.onrender.com/api/v1/redtech/auth/verify-email?token=${encodeURIComponent(token)}`;
-    console.log("Verify API URL:", verifyUrl); // Debug log
-    const verifyRes = await fetch(verifyUrl, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const verifyData = await verifyRes.json();
-    console.log("Verify API response:", JSON.stringify(verifyData, null, 2)); // Debug log
-
-    if (!verifyRes.ok || !verifyData.status) {
-      if (verifyRes.status === 400 && verifyData.message.includes("Token expired")) {
-        return NextResponse.json({ error: "Reset link has expired. Please request a new link." }, { status: 400 });
-      }
-      if (verifyRes.status === 500 && verifyData.message.includes("Duplicate entry")) {
-        return NextResponse.json({ error: "Internal server error. Please try again or contact support." }, { status: 500 });
-      }
-      return NextResponse.json({ error: verifyData.message || "Invalid or expired token" }, { status: verifyRes.status });
-    }
-
     const apiUrl = `https://redcollection.onrender.com/api/v1/redtech/auth/reset-password?newPassword=${encodeURIComponent(newPassword)}&confirmPassword=${encodeURIComponent(confirmPassword)}&token=${encodeURIComponent(token)}`;
     console.log("External API URL:", apiUrl); // Debug log
     const res = await fetch(apiUrl, {
@@ -42,6 +22,9 @@ export async function POST(request: Request) {
     if (res.ok && data.status) {
       return NextResponse.json({ success: true, message: data.message || "Password reset successfully" });
     } else {
+      if (data.message?.includes("expired")) {
+        return NextResponse.json({ error: "Reset link has expired. Please request a new link." }, { status: 400 });
+      }
       return NextResponse.json({ error: data.message || "Failed to reset password" }, { status: res.status });
     }
   } catch (error) {
