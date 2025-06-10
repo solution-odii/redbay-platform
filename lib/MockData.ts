@@ -426,6 +426,7 @@ export const merchantData = [
   {
     sN: 1,
     merchantName: "Uchenna Chiagozie",
+    email: "uche@mail.com",
     code: "90886",
     accountName: "Gabriela Daniels ",
     accountNumber: "5678901234",
@@ -437,6 +438,7 @@ export const merchantData = [
   {
     sN: 2,
     merchantName: "Felix  Adebayo",
+    email: "uche@mail.com",
     code: "24097",
     accountName: "Gabriela Daniels ",
     accountNumber: "0078901234",
@@ -448,6 +450,7 @@ export const merchantData = [
   {
     sN: 3,
     merchantName: "Janine Felicia",
+    email: "uche@mail.com",
     code: "34900",
     accountName: "Gabriela Daniels ",
     accountNumber: "3478901234",
@@ -459,6 +462,7 @@ export const merchantData = [
   {
     sN: 4,
     merchantName: "Marcus Bradley",
+    email: "uche@mail.com",
     code: "40076",
     accountName: "Gabriela Daniels ",
     accountNumber: "9078901234",
@@ -470,6 +474,7 @@ export const merchantData = [
   {
     sN: 5,
     merchantName: "Antonio Mayeria",
+    email: "uche@mail.com",
     code: "89000",
     accountName: "Gabriela Daniels ",
     accountNumber: "5868901234",
@@ -481,6 +486,7 @@ export const merchantData = [
   {
     sN: 6,
     merchantName: "Justina Janice",
+    email: "uche@mail.com",
     code: "00921",
     accountName: "Gabriela Daniels",
     accountNumber: "5478901234",
@@ -492,6 +498,7 @@ export const merchantData = [
   {
     sN: 7,
     merchantName: "Patrick Nancy",
+    email: "uche@mail.com",
     code: "03929",
     accountName: "Gabriela Daniels ",
     accountNumber: "5018905909",
@@ -503,6 +510,7 @@ export const merchantData = [
   {
     sN: 8,
     merchantName: "Patrick Peterside",
+    email: "uche@mail.com",
     code: "00925",
     accountName: "Gabriela Daniels ",
     accountNumber: "5008902909",
@@ -514,6 +522,7 @@ export const merchantData = [
   {
     sN: 9,
     merchantName: "Henry Karvalei",
+    email: "uche@mail.com",
     code: "22389",
     accountName: "Gabriela Daniels ",
     accountNumber: "0078901234",
@@ -525,6 +534,7 @@ export const merchantData = [
   {
     sN: 10,
     merchantName: "Kingsley King",
+    email: "uche@mail.com",
     code: "55671",
     accountName: "Gabriela Daniels ",
     accountNumber: "114890190",
@@ -536,6 +546,7 @@ export const merchantData = [
   {
     sN: 11,
     merchantName: "Kingsley Davee",
+    email: "uche@mail.com",
     code: "55671",
     accountName: "Gabriela Daniels ",
     accountNumber: "114890190",
