@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import {  Archivo } from "next/font/google"; 
 import "./globals.css";
+import "./styles/nprogress-custom.css";
 import { ThemeProvider } from "@/components/Theme-provider";
 import { Toaster } from "sonner";
+import NProgressWrapper from "@/NprogressWrapper";
+import { Suspense } from "react"; 
 
 
 
@@ -32,9 +35,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+               <Suspense fallback={null}>
+               <NProgressWrapper>
           {children}
           <Toaster richColors position="top-right" 
           />
+          </NProgressWrapper>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>

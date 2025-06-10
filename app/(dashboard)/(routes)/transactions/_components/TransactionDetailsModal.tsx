@@ -95,7 +95,7 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction, 
   return (
     <div className="fixed inset-0 z-[50] flex justify-end my-3 mr-3 ">
       <div
-        className="fixed inset-0 bg-[#140000B2] backdrop-blur-xs"
+        className="fixed inset-0 bg-[#140000B2] backdrop-blur-xs dark:bg-black/50"
         onClick={onClose}
       />
       <div

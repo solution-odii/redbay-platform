@@ -166,7 +166,7 @@ export default function SearchModal({
     <>
       <div>{trigger}</div>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogOverlay className="backdrop-blur-xs bg-[#140000B2]" />
+        <DialogOverlay className="backdrop-blur-xs bg-[#140000B2] dark:bg-black/50" />
         <VisuallyHidden>
             <DialogTitle>Search Modal</DialogTitle>
           </VisuallyHidden>
