@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CiUser } from "react-icons/ci";
 import { TbReceipt } from "react-icons/tb";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Search} from "lucide-react";
 import { useRouter } from "next/navigation";
 import Reset from "./svg Icons/Reset";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface Transaction {
   sN: number;
@@ -166,6 +167,9 @@ export default function SearchModal({
       <div>{trigger}</div>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogOverlay className="backdrop-blur-xs bg-[#140000B2]" />
+        <VisuallyHidden>
+            <DialogTitle>Search Modal</DialogTitle>
+          </VisuallyHidden>
         <DialogContent className="sm:max-w-[575px] border-none rounded-lg p-2 ">
           <div className="p-1  flex items-center justify-between">
             <div className="relative flex-1">

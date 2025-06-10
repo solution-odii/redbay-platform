@@ -1217,3 +1217,26 @@ export const auditTrailData = [
   // Add more entries as needed to reach desired total
 ];
 
+
+export const userData = [
+  { sN: 1, fullName: "Uchenna Mbakka Chibueze", email: "uchenna.mbakka@redpay.com", role: "Super Admin", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 2, fullName: "Felix Babatunde Adebayo", email: "felix.babatunde@redpay.com", role: "Admin", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 3, fullName: "Janine Felicia", email: "janine.felicia@redpay.com", role: "Collections Team Member", status: "Disabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 4, fullName: "Marcus Bradley", email: "marcus.bradley@redpay.com", role: "Collections Team Member", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 5, fullName: "Antonio Mayeria", email: "antonio.mayeria@redpay.com", role: "Merchant Access Authorizer", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 6, fullName: "Justina Janice", email: "justina.janice@redpay.com", role: "Merchant Access Initiator", status: "Disabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 7, fullName: "Sophia Okwuchi Anieche", email: "sophia.anieche@redpay.com", role: "Collections Team Member", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 8, fullName: "Patrick Peterside", email: "patrick.peterside@redpay.com", role: "Collections Team Member", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 9, fullName: "Henry Karvalei", email: "henry.karvalei@redpay.com", role: "Admin", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 10, fullName: "Kingsley King", email: "kingsley.king@redpay.com", role: "Admin", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  { sN: 11, fullName: "Kingsley King", email: "kingsley.king@redpay.com", role: "Admin", status: "Enabled", createdAt: "25/06/04-03:17:37PM" },
+  // Additional mock data to reach 14,098 entries (simplified for brevity, extend as needed)
+  // ...Array.from({ length: 14088 }, (_, i) => ({
+  //   sN: i + 11,
+  //   fullName: `User ${i + 11}`,
+  //   email: `user${i + 11}@redpay.com`,
+  //   role: ["Super Admin", "Admin", "Collections Team Member", "Merchant Access Authorizer", "Merchant Access Initiator"][Math.floor(Math.random() * 5)],
+  //   status: Math.random() > 0.3 ? "Enabled" : "Disabled",
+  //   createdAt: "25/06/04-03:17:37PM",
+  // })),
+];
