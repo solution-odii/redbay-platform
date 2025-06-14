@@ -63,8 +63,8 @@ export default function TransactionPage() {
           onClick={() => setIsExportModalOpen(true)}
           className=" hover:bg-[#A60000]  rounded-md"
         >
-          <Download className="h-4 w-4 mr-2" />
           Export
+          <Download className="h-4 w-4 ml-2" />
         </Button>
       </div>
 

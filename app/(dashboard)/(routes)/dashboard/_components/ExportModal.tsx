@@ -9,6 +9,7 @@ import { CalendarIcon } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -54,7 +55,10 @@ export function ExportModal({ isOpen, onClose, onExport, fieldOptions }: ExportM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="backdrop-blur-xs bg-[#140000B2] " />
+      <DialogOverlay className="backdrop-blur-xs bg-[#140000B2] dark:bg-black/50" />
+      <VisuallyHidden>
+            <DialogTitle>Export Modal</DialogTitle>
+          </VisuallyHidden>
       <DialogContent className="sm:max-w-[571px] rounded-lg ">
         <DialogHeader className="border-b pb-4">
           <DialogTitle className="">

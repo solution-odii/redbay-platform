@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Logo from "@/components/svg Icons/Logo";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function VerifyPage() {
   const [value, setValue] = useState("");
@@ -36,29 +37,36 @@ export default function VerifyPage() {
     e.preventDefault();
     if (value.length !== 6) {
       setError("Please enter all 6 digits of the OTP");
+      toast.error("Please enter all 6 digits of the OTP");
       return;
     }
     setError("");
     setIsLoading(true);
 
     try {
-      console.log("Sending OTP:", value, "From:", from); // Debug log
+      console.log("Sending OTP:", value, "From:", from);
       const url = `/api/auth/verify?otp=${encodeURIComponent(value)}&from=${encodeURIComponent(from || "")}`;
-      console.log("Fetching URL:", url); // Debug log
+      console.log("Fetching URL:", url);
       const res = await fetch(url, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
-      console.log("API response:", data); // Debug log
+      console.log("API response:", data);
       if (res.ok && data.success) {
+        localStorage.setItem("accessToken", data.data.accessToken);
+        localStorage.setItem("organizationId", data.data.organizationId);
+        localStorage.setItem("merchantAdminId", data.data.userId);
+        toast.success("Verification successful!");
         router.push(data.redirect || "/dashboard");
       } else {
         setError(data.error || "Invalid OTP. Please try again.");
+        toast.error(data.error || "Invalid OTP. Please try again.");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed. Please try again.");
+      toast.error("Verification failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +78,7 @@ export default function VerifyPage() {
     setIsLoading(true);
 
     try {
-      console.log("Resending OTP for email:", email); // Debug log
+      console.log("Resending OTP for email:", email);
       const res = await fetch("/api/auth/resend-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,15 +86,17 @@ export default function VerifyPage() {
       });
 
       const data = await res.json();
-      console.log("Resend OTP response:", data); // Debug log
+      console.log("Resend OTP response:", data);
       if (res.ok && data.success) {
-        alert("New OTP sent to " + email); // Replace with toast
+        toast.success("New OTP sent to " + email);
       } else {
         setError(data.error || "Failed to resend OTP");
+        toast.error(data.error || "Failed to resend OTP");
       }
     } catch (err) {
       setError("Failed to resend OTP. Please try again.");
-      console.log(err);
+      toast.error("Failed to resend OTP. Please try again.");
+      console.error("Resend OTP error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +111,7 @@ export default function VerifyPage() {
       <div className="flex flex-col items-center space-y-4">
         <Logo />
         <h1 className="text-2xl font-semibold text-primary">Verify it&apos;s you</h1>
-        <p className="text-xs font-light">Enter 6-digit OTP code sent to {email}. It’s valid for 5 minutes.</p>
+        <p className="text-xs font-light">Enter 6-digit OTP code sent to {email}. It&apos;s valid for 5 minutes.</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-4 flex flex-col items-center justify-center">
@@ -109,7 +119,7 @@ export default function VerifyPage() {
             maxLength={6}
             value={value}
             onChange={(value) => {
-              console.log("OTP input:", value); // Debug log
+              console.log("OTP input:", value);
               setValue(value);
             }}
             disabled={isLoading}

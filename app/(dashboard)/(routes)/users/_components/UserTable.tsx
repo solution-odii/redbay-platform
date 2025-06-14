@@ -29,14 +29,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Filter, Search, ChevronLeft, ChevronRight, CalendarIcon } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
-import { userData } from "@/lib/MockData";
+import { useState, useEffect } from "react";
 import { BsThreeDots } from "react-icons/bs";
-// import UserDetailsModal from "./UserDetailsModal";
 import View from "@/components/svg Icons/View";
 import Download from "@/components/svg Icons/Download";
+import ConfirmActionModal from "./ConfirmActionModal";
+import { toast } from "sonner";
+import UserDetailsModal from "./UsersDetailsModal";
 
-export function UserTable() {
+export function UserTable({ refetchTrigger }: { refetchTrigger: number }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState({
@@ -46,47 +47,46 @@ export function UserTable() {
     sortBy: "default",
     status: "",
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [, setSelectedUser] = useState<any>(null);
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [actionType, setActionType] = useState<"Enable" | "Disable">("Disable");
+  const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [users, setUsers] = useState<any[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
-  const totalItems = userData.length;
 
-  const filteredData = userData.filter((item) => {
-    const matchesSearch =
-      item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDate =
-      (!filter.fromDate || new Date(item.createdAt) >= filter.fromDate) &&
-      (!filter.toDate || new Date(item.createdAt) <= filter.toDate);
-    const matchesRole = !filter.role || item.role === filter.role;
-    const matchesStatus = !filter.status || item.status === filter.status;
-    return matchesSearch && matchesDate && matchesRole && matchesStatus;
-  });
-
-  const sortedData = [...filteredData].sort((a, b) => {
-    switch (filter.sortBy) {
-      case "name-a-z":
-        return a.fullName.localeCompare(b.fullName);
-      case "name-z-a":
-        return b.fullName.localeCompare(a.fullName);
-      case "role-a-z":
-        return a.role.localeCompare(b.role);
-      case "role-z-a":
-        return b.role.localeCompare(a.role);
-      case "status-enabled-first":
-        return a.status === "Enabled" ? -1 : b.status === "Enabled" ? 1 : 0;
-      case "status-disabled-first":
-        return a.status === "Disabled" ? -1 : b.status === "Disabled" ? 1 : 0;
-      default:
-        return 0;
+  const fetchUsers = async () => {
+    try {
+      const fromDate = filter.fromDate ? filter.fromDate.toISOString().split("T")[0] : "";
+      const toDate = filter.toDate ? filter.toDate.toISOString().split("T")[0] : "";
+      const status = filter.status === "Enabled" ? "true" : filter.status === "Disabled" ? "false" : "";
+      const res = await fetch(
+        `/api/get-staff?merchantAdminId=${encodeURIComponent("MERCHANT_ADMIN_ID")}&page=${currentPage}&size=${itemsPerPage}&search=${encodeURIComponent(searchTerm)}&fromDate=${fromDate}&toDate=${toDate}&role=${encodeURIComponent(filter.role)}&status=${encodeURIComponent(status)}&sortBy=${encodeURIComponent(filter.sortBy)}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setUsers(data.data);
+        setTotalItems(data.total);
+      } else {
+        toast.error(data.error || "Failed to fetch staff");
+      }
+    } catch (error) {
+      toast.error("Failed to fetch staff");
+      console.error("Fetch staff error:", error);
     }
-  });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [currentPage, searchTerm, filter, refetchTrigger]);
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = sortedData.slice(startIndex, endIndex);
+  const paginatedData = users;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -118,7 +118,7 @@ export function UserTable() {
   const handleResetAll = () => setFilter({ fromDate: undefined, toDate: undefined, role: "", sortBy: "default", status: "" });
 
   const handleApplyFilters = () => {
-    // Filtering is reactive
+    fetchUsers();
   };
 
   function DatePicker({ id, date, onSelect, placeholder }: { id: string; date: Date | undefined; onSelect: (date: Date | undefined) => void; placeholder: string }) {
@@ -157,6 +157,75 @@ export function UserTable() {
       </div>
     );
   }
+
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleStatusChange = (user: any, newStatus: "Enabled" | "Disabled") => {
+    setSelectedUser(user);
+    setActionType(newStatus === "Enabled" ? "Enable" : "Disable");
+    setIsConfirmModalOpen(true);
+  };
+
+  const confirmStatusChange = async () => {
+    if (selectedUser) {
+      try {
+        const res = await fetch(
+          `/api/disable-staff?merchantAdminId=${encodeURIComponent("MERCHANT_ADMIN_ID")}&staffId=${encodeURIComponent(selectedUser.userID)}`,
+          {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
+          }
+        );
+        const data = await res.json();
+        if (data.success) {
+          toast.success(`User ${actionType.toLowerCase()}d successfully!`);
+          fetchUsers();
+        } else {
+          toast.error(data.error || `Failed to ${actionType.toLowerCase()} user`);
+        }
+      } catch (error) {
+        toast.error(`Failed to ${actionType.toLowerCase()} user`);
+        console.error("Status change error:", error);
+      }
+    }
+    setIsConfirmModalOpen(false);
+    setSelectedUser(null);
+  };
+
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChangeRole = async (user: any, newRole: string) => {
+    try {
+      const res = await fetch("/api/assign-role", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+        },
+        body: JSON.stringify({
+          adminId: "MERCHANT_ADMIN_ID",
+          email: user.email,
+          roleName: newRole,
+          roleId: `ROLE_${newRole.toUpperCase().replace(/\s+/g, "_")}`,
+          permissionsIds: [], // Adjust based on role
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Role updated successfully!");
+        fetchUsers();
+      } else {
+        toast.error(data.error || "Failed to update role");
+      }
+    } catch (error) {
+      toast.error("Failed to update role");
+      console.error("Change role error:", error);
+    }
+  };
+
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleViewUser = (user: any) => {
+    setSelectedUser(user);
+    setIsUserDetailsOpen(true);
+  };
 
   return (
     <div className="w-full relative">
@@ -362,11 +431,11 @@ export function UserTable() {
           </TableHeader>
           <TableBody>
             {paginatedData.map((item) => (
-              <TableRow key={item.sN}>
+              <TableRow key={item.userID}>
                 <TableCell>{item.sN}</TableCell>
                 <TableCell className="flex items-center space-x-2">
                   <Avatar>
-                    <AvatarImage src="/placeholder-avatar.jpg" alt={item.fullName} />
+                    <AvatarImage src={item.logoUrl || "/images/avatar-placeholder.jpg"} alt={item.fullName} />
                     <AvatarFallback>{getInitials(item.fullName)}</AvatarFallback>
                   </Avatar>
                   <span>{item.fullName}</span>
@@ -399,8 +468,27 @@ export function UserTable() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => setSelectedUser(item)}><View /> View</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => console.log("Download", item.sN)}><Download /> Download</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleViewUser(item)}><View /> View</DropdownMenuItem>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <DropdownMenuItem><View /> Change Role</DropdownMenuItem>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem onClick={() => handleChangeRole(item, "Super Admin")}>Super Admin</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleChangeRole(item, "Admin")}>Admin</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleChangeRole(item, "Collections Team Member")}>Collections Team Member</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleChangeRole(item, "Merchant Access Authorizer")}>Merchant Access Authorizer</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleChangeRole(item, "Merchant Access Initiator")}>
+                            Merchant Access Initiator
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      {item.status === "Enabled" ? (
+                        <DropdownMenuItem onClick={() => handleStatusChange(item, "Disabled")}><View /> Disable</DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => handleStatusChange(item, "Enabled")}><View /> Enable</DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem onClick={() => console.log("Download", item.userID)}><Download /> Download</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -409,12 +497,19 @@ export function UserTable() {
           </TableBody>
         </Table>
       </div>
-      {/* <UserDetailsModal
-        isOpen={!!selectedUser}
-        onClose={() => setSelectedUser(null)}
+      <ConfirmActionModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        user={selectedUser}
+        action={actionType}
+        onConfirm={confirmStatusChange}
+      />
+      <UserDetailsModal
+        isOpen={isUserDetailsOpen}
+        onClose={() => setIsUserDetailsOpen(false)}
         user={selectedUser}
         setSelectedUser={setSelectedUser}
-      /> */}
+      />
     </div>
   );
 }
