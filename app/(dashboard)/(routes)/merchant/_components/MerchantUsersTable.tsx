@@ -27,18 +27,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, ChevronLeft, ChevronRight, CalendarIcon } from "lucide-react";
+import { Filter, Search, ChevronLeft, ChevronRight, CalendarIcon, Edit } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useState, useEffect } from "react";
-import { merchantData } from "@/lib/MockData";
+import { merchantUsersData } from "@/lib/MockData"; // Assuming this is where the data is stored
 import { BsThreeDots } from "react-icons/bs";
 import View from "@/components/svg Icons/View";
-import Download from "@/components/svg Icons/Download";
 import { useRouter } from "next/navigation";
 
-export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merchant: any) => void) => void }) {
-  const [merchants, setMerchants] = useState(merchantData);
+export function MerchantUsersTable() {
+  const [users, setUsers] = useState(merchantUsersData);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState({
@@ -47,36 +46,21 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
     status: "",
     sortBy: "default",
   });
-  const [, setSelectedMerchant] = useState<any>(null);
   const itemsPerPage = 10;
-  const totalItems = merchants.length;
+  const totalItems = users.length;
   const router = useRouter();
 
-  // Sync merchants when addMerchant is called
   useEffect(() => {
-    if (addMerchant) {
-      addMerchant((newMerchant: any) => {
-        const merchantWithDefaults = {
-          ...newMerchant,
-          sN: (merchants.length + 1).toString(),
-          code: `MCH-${Date.now().toString().slice(-6)}`,
-          primaryContact: newMerchant.contactName,
-          noOfUsers: 0,
-          createdAt: new Date().toLocaleString(),
-        };
-        setMerchants((prev) => [...prev, merchantWithDefaults]);
-      });
-    }
-  }, [addMerchant, merchants.length]);
+    // Initial load or data sync if needed
+    setUsers(merchantUsersData); // Ensure data is loaded from mockData.ts
+  }, []);
 
   // Filter and sort data
-  const filteredData = merchants.filter((item) => {
+  const filteredData = users.filter((item) => {
     const matchesSearch =
-      item.merchantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.code.includes(searchTerm) ||
-      item.accountName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.accountNumber.includes(searchTerm) ||
-      item.primaryContact.toLowerCase().includes(searchTerm.toLowerCase());
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.role.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDate =
       (!filter.fromDate || new Date(item.createdAt) >= filter.fromDate) &&
       (!filter.toDate || new Date(item.createdAt) <= filter.toDate);
@@ -86,10 +70,10 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
 
   const sortedData = [...filteredData].sort((a, b) => {
     switch (filter.sortBy) {
-      case "merchant-a-z":
-        return a.merchantName.localeCompare(b.merchantName);
-      case "merchant-z-a":
-        return b.merchantName.localeCompare(a.merchantName);
+      case "name-a-z":
+        return a.name.localeCompare(b.name);
+      case "name-z-a":
+        return b.name.localeCompare(a.name);
       case "status-active-first":
         return a.status === "Active" ? -1 : b.status === "Active" ? 1 : 0;
       case "status-inactive-first":
@@ -236,8 +220,8 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="merchant-a-z">Merchant (A-Z)</SelectItem>
-                      <SelectItem value="merchant-z-a">Merchant (Z-A)</SelectItem>
+                      <SelectItem value="name-a-z">Name (A-Z)</SelectItem>
+                      <SelectItem value="name-z-a">Name (Z-A)</SelectItem>
                       <SelectItem value="status-active-first">Status (Active First)</SelectItem>
                       <SelectItem value="status-inactive-first">Status (Inactive First)</SelectItem>
                     </SelectContent>
@@ -255,7 +239,7 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                     onValueChange={(value) => setFilter((prev) => ({ ...prev, status: value }))}
                   >
                     <SelectTrigger className="w-full bg-[#F8F8F8] dark:bg-gray-700 border-0 rounded">
-                      <SelectValue placeholder="Active" />
+                      <SelectValue placeholder="All" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Active"><span className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: "#4CAF50" }} /> Active</SelectItem>
@@ -276,7 +260,7 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
           </DropdownMenu>
           <div className="relative w-[300px]">
             <Input
-              placeholder="Search Merchant, Account Name..."
+              placeholder="Search Name, Email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-3 pr-10 bg-[#F8F8F8] dark:bg-background border-0"
@@ -317,7 +301,7 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <span>Go to Page:</span>
+          {/* <span>Go to Page:</span>
           <Select
             value={currentPage.toString()}
             onValueChange={(value) => handlePageChange(parseInt(value))}
@@ -332,21 +316,18 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
       </div>
       <div>
-        <Table >
+        <Table>
           <TableHeader className="bg-[#F5F5F5] dark:bg-background">
             <TableRow>
               <TableHead>S/N</TableHead>
-              <TableHead>Merchant Name</TableHead>
-              <TableHead>Code</TableHead>
-              <TableHead>Account Name</TableHead>
-              <TableHead>Account Number</TableHead>
-              <TableHead>Primary Contact</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>No. of Users</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
@@ -357,15 +338,13 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                 <TableCell>{item.sN}</TableCell>
                 <TableCell className="flex items-center space-x-2">
                   <Avatar>
-                    <AvatarImage src="/placeholder-avatar.jpg" alt={item.merchantName} />
-                    <AvatarFallback>{getInitials(item.merchantName)}</AvatarFallback>
+                    <AvatarImage src="/placeholder-avatar.jpg" alt={item.name} />
+                    <AvatarFallback>{getInitials(item.name)}</AvatarFallback>
                   </Avatar>
-                  <span>{item.merchantName}</span>
+                  <span>{item.name}</span>
                 </TableCell>
-                <TableCell>{item.code}</TableCell>
-                <TableCell>{item.accountName}</TableCell>
-                <TableCell>{item.accountNumber}</TableCell>
-                <TableCell>{item.primaryContact}</TableCell>
+                <TableCell>{item.email}</TableCell>
+                <TableCell>{item.role}</TableCell>
                 <TableCell>
                   <span className="flex items-center">
                     <span
@@ -383,7 +362,6 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                     </span>
                   </span>
                 </TableCell>
-                <TableCell>{item.noOfUsers}</TableCell>
                 <TableCell>{item.createdAt}</TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -393,8 +371,8 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => router.push(`/merchant/profile/${item.sN}`)}><View /> View Profile</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => console.log("Download", item.sN)}><Download /> Download</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => console.log("View", item.sN)}><View /> View</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => console.log("Edit", item.sN)}><Edit /> Edit</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
