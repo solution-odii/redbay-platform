@@ -1399,18 +1399,18 @@ export const userData = [
   // })),
 
   export const merchantUsersData = [
-    { sN: "1", name: "John Doe", email: "john.doe@example.com", role: "Admin", status: "Active", createdAt: new Date("2025-06-01").toLocaleString() },
-    { sN: "2", name: "Jane Smith", email: "jane.smith@example.com", role: "User", status: "Inactive", createdAt: new Date("2025-06-02").toLocaleString() },
-    { sN: "3", name: "Mike Johnson", email: "mike.johnson@example.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-03").toLocaleString() },
-    { sN: "4", name: "Sarah Williams", email: "sarah.williams@example.com", role: "Support", status: "Active", createdAt: new Date("2025-06-04").toLocaleString() },
-    { sN: "5", name: "Robert Brown", email: "robert.brown@example.com", role: "User", status: "Inactive", createdAt: new Date("2025-06-05").toLocaleString() },
-    { sN: "6", name: "Emily Davis", email: "emily.davis@example.com", role: "Admin", status: "Active", createdAt: new Date("2025-06-06").toLocaleString() },
-    { sN: "7", name: "David Wilson", email: "david.wilson@example.com", role: "Manager", status: "Inactive", createdAt: new Date("2025-06-07").toLocaleString() },
-    { sN: "8", name: "Lisa Anderson", email: "lisa.anderson@example.com", role: "Support", status: "Active", createdAt: new Date("2025-06-08").toLocaleString() },
-    { sN: "9", name: "James Taylor", email: "james.taylor@example.com", role: "User", status: "Active", createdAt: new Date("2025-06-09").toLocaleString() },
-    { sN: "10", name: "Karen Martinez", email: "karen.martinez@example.com", role: "Admin", status: "Inactive", createdAt: new Date("2025-06-10").toLocaleString() },
-    { sN: "11", name: "Chris Lee", email: "chris.lee@example.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-11").toLocaleString() },
-    { sN: "12", name: "Anna Clark", email: "anna.clark@example.com", role: "Support", status: "Inactive", createdAt: new Date("2025-06-12").toLocaleString() },
+    { sN: "1", username: "jdoe123", email: "john.doe@example.com", accountNumber: "1234567890", accountStatus: "Active", createdAt: new Date("2025-06-01").toLocaleString() },
+    { sN: "2", username: "jsmith456", email: "jane.smith@example.com", accountNumber: "9876543210", accountStatus: "Inactive", createdAt: new Date("2025-06-02").toLocaleString() },
+    { sN: "3", username: "mjohn789", email: "mike.johnson@example.com", accountNumber: "4567891230", accountStatus: "Active", createdAt: new Date("2025-06-03").toLocaleString() },
+    { sN: "4", username: "swill012", email: "sarah.williams@example.com", accountNumber: "7891234560", accountStatus: "Active", createdAt: new Date("2025-06-04").toLocaleString() },
+    { sN: "5", username: "rbrown345", email: "robert.brown@example.com", accountNumber: "3216549870",  accountStatus: "Inactive", createdAt: new Date("2025-06-05").toLocaleString() },
+    { sN: "6", username: "edavis678", email: "emily.davis@example.com", accountNumber: "6543217890", accountStatus: "Active", createdAt: new Date("2025-06-06").toLocaleString() },
+    { sN: "7", username: "dwilson901", email: "david.wilson@example.com", accountNumber: "1472583690", accountStatus: "Inactive", createdAt: new Date("2025-06-07").toLocaleString() },
+    { sN: "8", username: "landerson234", email: "lisa.anderson@example.com", accountNumber: "2583691470", accountStatus: "Active", createdAt: new Date("2025-06-08").toLocaleString() },
+    { sN: "9", username: "jtaylor567", email: "james.taylor@example.com", accountNumber: "3691472580", accountStatus: "Active", createdAt: new Date("2025-06-09").toLocaleString() },
+    { sN: "10", username: "kmart890", email: "karen.martinez@example.com", accountNumber: "7418529630", accountStatus: "Inactive", createdAt: new Date("2025-06-10").toLocaleString() },
+    { sN: "11", username: "clee123", email: "chris.lee@example.com", accountNumber: "8529637410", accountStatus: "Active", createdAt: new Date("2025-06-11").toLocaleString() },
+    { sN: "12", username: "aclark456", email: "anna.clark@example.com", accountNumber: "9637418520", accountStatus: "Inactive", createdAt: new Date("2025-06-12").toLocaleString() },
   ];
 
   export const merchantStaffsData = [

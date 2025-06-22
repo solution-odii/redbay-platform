@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -31,7 +30,7 @@ import { Filter, Search, ChevronLeft, ChevronRight, CalendarIcon, Edit } from "l
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useState, useEffect } from "react";
-import { merchantUsersData } from "@/lib/MockData"; // Assuming this is where the data is stored
+import { merchantUsersData } from "@/lib/MockData";
 import { BsThreeDots } from "react-icons/bs";
 import View from "@/components/svg Icons/View";
 
@@ -49,33 +48,31 @@ export function MerchantUsersTable() {
   const totalItems = users.length;
 
   useEffect(() => {
-    // Initial load or data sync if needed
-    setUsers(merchantUsersData); // Ensure data is loaded from mockData.ts
+    setUsers(merchantUsersData);
   }, []);
 
-  // Filter and sort data
   const filteredData = users.filter((item) => {
     const matchesSearch =
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchTerm.toLowerCase());
+      item.accountNumber.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDate =
       (!filter.fromDate || new Date(item.createdAt) >= filter.fromDate) &&
       (!filter.toDate || new Date(item.createdAt) <= filter.toDate);
-    const matchesStatus = !filter.status || item.status === filter.status;
+    const matchesStatus = !filter.status || item.accountStatus === filter.status;
     return matchesSearch && matchesDate && matchesStatus;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
     switch (filter.sortBy) {
       case "name-a-z":
-        return a.name.localeCompare(b.name);
+        return a.username.localeCompare(b.username);
       case "name-z-a":
-        return b.name.localeCompare(a.name);
+        return b.username.localeCompare(a.username);
       case "status-active-first":
-        return a.status === "Active" ? -1 : b.status === "Active" ? 1 : 0;
+        return a.accountStatus === "Active" ? -1 : b.accountStatus === "Active" ? 1 : 0;
       case "status-inactive-first":
-        return a.status === "Inactive" ? -1 : b.status === "Inactive" ? 1 : 0;
+        return a.accountStatus === "Inactive" ? -1 : b.accountStatus === "Inactive" ? 1 : 0;
       default:
         return 0;
     }
@@ -104,8 +101,8 @@ export function MerchantUsersTable() {
     return pages;
   };
 
-  const getInitials = (name: string) => {
-    const names = name.split(" ");
+  const getInitials = (username: string) => {
+    const names = username.split(" ");
     return names.length > 1 ? names[0][0] + names[names.length - 1][0] : names[0][0];
   };
 
@@ -218,8 +215,8 @@ export function MerchantUsersTable() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="name-a-z">Name (A-Z)</SelectItem>
-                      <SelectItem value="name-z-a">Name (Z-A)</SelectItem>
+                      <SelectItem value="name-a-z">Username (A-Z)</SelectItem>
+                      <SelectItem value="name-z-a">Username (Z-A)</SelectItem>
                       <SelectItem value="status-active-first">Status (Active First)</SelectItem>
                       <SelectItem value="status-inactive-first">Status (Inactive First)</SelectItem>
                     </SelectContent>
@@ -258,7 +255,7 @@ export function MerchantUsersTable() {
           </DropdownMenu>
           <div className="relative w-[300px]">
             <Input
-              placeholder="Search Name, Email..."
+              placeholder="Search Username, Email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-3 pr-10 bg-[#F8F8F8] dark:bg-background border-0"
@@ -299,22 +296,6 @@ export function MerchantUsersTable() {
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          {/* <span>Go to Page:</span>
-          <Select
-            value={currentPage.toString()}
-            onValueChange={(value) => handlePageChange(parseInt(value))}
-          >
-            <SelectTrigger className="w-[80px]">
-              <SelectValue placeholder={currentPage.toString()} />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <SelectItem key={page} value={page.toString()}>
-                  {page}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
         </div>
       </div>
       <div>
@@ -322,9 +303,9 @@ export function MerchantUsersTable() {
           <TableHeader className="bg-[#F5F5F5] dark:bg-background">
             <TableRow>
               <TableHead>S/N</TableHead>
-              <TableHead>Name</TableHead>
+              <TableHead>Username</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>Account Number</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Action</TableHead>
@@ -336,27 +317,27 @@ export function MerchantUsersTable() {
                 <TableCell>{item.sN}</TableCell>
                 <TableCell className="flex items-center space-x-2">
                   <Avatar>
-                    <AvatarImage src="/placeholder-avatar.jpg" alt={item.name} />
-                    <AvatarFallback>{getInitials(item.name)}</AvatarFallback>
+                    <AvatarImage src="/placeholder-avatar.jpg" alt={item.username} />
+                    <AvatarFallback>{getInitials(item.username)}</AvatarFallback>
                   </Avatar>
-                  <span>{item.name}</span>
+                  <span>{item.username}</span>
                 </TableCell>
                 <TableCell>{item.email}</TableCell>
-                <TableCell>{item.role}</TableCell>
+                <TableCell>{item.accountNumber}</TableCell>
                 <TableCell>
                   <span className="flex items-center">
                     <span
                       className="w-2 h-2 rounded-full mr-2"
                       style={{
-                        backgroundColor: item.status === "Active" ? "#4CAF50" : "#FF4444",
+                        backgroundColor: item.accountStatus === "Active" ? "#4CAF50" : "#FF4444",
                       }}
                     />
                     <span
                       style={{
-                        color: item.status === "Active" ? "#4CAF50" : "#FF4444",
+                        color: item.accountStatus === "Active" ? "#4CAF50" : "#FF4444",
                       }}
                     >
-                      {item.status}
+                      {item.accountStatus}
                     </span>
                   </span>
                 </TableCell>
