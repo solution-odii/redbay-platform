@@ -1397,3 +1397,33 @@ export const userData = [
   //   status: Math.random() > 0.3 ? "Enabled" : "Disabled",
   //   createdAt: "25/06/04-03:17:37PM",
   // })),
+
+  export const merchantUsersData = [
+    { sN: "1", name: "John Doe", email: "john.doe@example.com", role: "Admin", status: "Active", createdAt: new Date("2025-06-01").toLocaleString() },
+    { sN: "2", name: "Jane Smith", email: "jane.smith@example.com", role: "User", status: "Inactive", createdAt: new Date("2025-06-02").toLocaleString() },
+    { sN: "3", name: "Mike Johnson", email: "mike.johnson@example.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-03").toLocaleString() },
+    { sN: "4", name: "Sarah Williams", email: "sarah.williams@example.com", role: "Support", status: "Active", createdAt: new Date("2025-06-04").toLocaleString() },
+    { sN: "5", name: "Robert Brown", email: "robert.brown@example.com", role: "User", status: "Inactive", createdAt: new Date("2025-06-05").toLocaleString() },
+    { sN: "6", name: "Emily Davis", email: "emily.davis@example.com", role: "Admin", status: "Active", createdAt: new Date("2025-06-06").toLocaleString() },
+    { sN: "7", name: "David Wilson", email: "david.wilson@example.com", role: "Manager", status: "Inactive", createdAt: new Date("2025-06-07").toLocaleString() },
+    { sN: "8", name: "Lisa Anderson", email: "lisa.anderson@example.com", role: "Support", status: "Active", createdAt: new Date("2025-06-08").toLocaleString() },
+    { sN: "9", name: "James Taylor", email: "james.taylor@example.com", role: "User", status: "Active", createdAt: new Date("2025-06-09").toLocaleString() },
+    { sN: "10", name: "Karen Martinez", email: "karen.martinez@example.com", role: "Admin", status: "Inactive", createdAt: new Date("2025-06-10").toLocaleString() },
+    { sN: "11", name: "Chris Lee", email: "chris.lee@example.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-11").toLocaleString() },
+    { sN: "12", name: "Anna Clark", email: "anna.clark@example.com", role: "Support", status: "Inactive", createdAt: new Date("2025-06-12").toLocaleString() },
+  ];
+
+  export const merchantStaffsData = [
+    { sN: "1", name: "John Doe", email: "john.doe@shopa.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-01").toLocaleString() },
+    { sN: "2", name: "Jane Smith", email: "jane.smith@shopa.com", role: "Cashier", status: "Inactive", createdAt: new Date("2025-06-02").toLocaleString() },
+    { sN: "3", name: "Mike Johnson", email: "mike.johnson@shopa.com", role: "Supervisor", status: "Active", createdAt: new Date("2025-06-03").toLocaleString() },
+    { sN: "4", name: "Sarah Williams", email: "sarah.williams@shopa.com", role: "Assistant", status: "Active", createdAt: new Date("2025-06-04").toLocaleString() },
+    { sN: "5", name: "Robert Brown", email: "robert.brown@shopa.com", role: "Cashier", status: "Inactive", createdAt: new Date("2025-06-05").toLocaleString() },
+    { sN: "6", name: "Emily Davis", email: "emily.davis@shopa.com", role: "Manager", status: "Active", createdAt: new Date("2025-06-06").toLocaleString() },
+    { sN: "7", name: "David Wilson", email: "david.wilson@shopa.com", role: "Supervisor", status: "Inactive", createdAt: new Date("2025-06-07").toLocaleString() },
+    { sN: "8", name: "Lisa Anderson", email: "lisa.anderson@shopa.com", role: "Assistant", status: "Active", createdAt: new Date("2025-06-08").toLocaleString() },
+    { sN: "9", name: "James Taylor", email: "james.taylor@shopa.com", role: "Cashier", status: "Active", createdAt: new Date("2025-06-09").toLocaleString() },
+    { sN: "10", name: "Karen Martinez", email: "karen.martinez@shopa.com", role: "Manager", status: "Inactive", createdAt: new Date("2025-06-10").toLocaleString() },
+    { sN: "11", name: "Chris Lee", email: "chris.lee@shopa.com", role: "Supervisor", status: "Active", createdAt: new Date("2025-06-11").toLocaleString() },
+    { sN: "12", name: "Anna Clark", email: "anna.clark@shopa.com", role: "Assistant", status: "Inactive", createdAt: new Date("2025-06-12").toLocaleString() },
+  ];
