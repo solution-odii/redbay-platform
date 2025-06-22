@@ -37,6 +37,7 @@ import View from "@/components/svg Icons/View";
 import Download from "@/components/svg Icons/Download";
 import { useRouter } from "next/navigation";
 
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merchant: any) => void) => void }) {
   const [merchants, setMerchants] = useState(merchantData);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +48,6 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
     status: "",
     sortBy: "default",
   });
-  const [, setSelectedMerchant] = useState<any>(null);
   const itemsPerPage = 10;
   const totalItems = merchants.length;
   const router = useRouter();
@@ -55,6 +55,7 @@ export function MerchantTable({ addMerchant }: { addMerchant?: (callback: (merch
   // Sync merchants when addMerchant is called
   useEffect(() => {
     if (addMerchant) {
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       addMerchant((newMerchant: any) => {
         const merchantWithDefaults = {
           ...newMerchant,

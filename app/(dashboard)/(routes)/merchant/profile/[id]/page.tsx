@@ -17,6 +17,7 @@ import React from "react";
 
 export default function MerchantProfilePage({ params }: { params: { id: string } }) {
   const router = useRouter();
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [merchant, setMerchant] = useState<any>(null);
 
   useEffect(() => {

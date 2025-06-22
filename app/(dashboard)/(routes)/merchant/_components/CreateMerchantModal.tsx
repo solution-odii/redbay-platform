@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogOverlay, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function CreateMerchantModal({ isOpen, onClose, onAddMerchant }: { isOpen: boolean; onClose: () => void; onAddMerchant: (merchant: { merchantName: string; merchantBVN: string; contactName: string; contactEmail: string; accountName: string; accountNumber: string; status: string }) => void }) {

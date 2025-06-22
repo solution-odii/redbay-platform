@@ -34,7 +34,6 @@ import { useState, useEffect } from "react";
 import { merchantStaffsData } from "@/lib/MockData"; // Data source
 import { BsThreeDots } from "react-icons/bs";
 import View from "@/components/svg Icons/View";
-import { useRouter } from "next/navigation";
 
 export function MerchantStaffsTable() {
   const [staff, setStaff] = useState(merchantStaffsData);
@@ -48,7 +47,6 @@ export function MerchantStaffsTable() {
   });
   const itemsPerPage = 10;
   const totalItems = staff.length;
-  const router = useRouter();
 
   useEffect(() => {
     setStaff(merchantStaffsData);

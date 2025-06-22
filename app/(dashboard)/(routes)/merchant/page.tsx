@@ -38,6 +38,7 @@ export default function MerchantPage() {
     setIsExportModalOpen(false);
   };
 
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAddMerchant = (newMerchant: any) => {
     // This will invoke the addMerchant function passed to MerchantTable
     if (addMerchantRef.current) {
@@ -46,6 +47,7 @@ export default function MerchantPage() {
   };
 
   // Create a ref to store the addMerchant function
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addMerchantRef = useRef<(merchant: any) => void | null>(null);
 
   return (

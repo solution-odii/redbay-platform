@@ -34,7 +34,6 @@ import { useState, useEffect } from "react";
 import { merchantUsersData } from "@/lib/MockData"; // Assuming this is where the data is stored
 import { BsThreeDots } from "react-icons/bs";
 import View from "@/components/svg Icons/View";
-import { useRouter } from "next/navigation";
 
 export function MerchantUsersTable() {
   const [users, setUsers] = useState(merchantUsersData);
@@ -48,7 +47,6 @@ export function MerchantUsersTable() {
   });
   const itemsPerPage = 10;
   const totalItems = users.length;
-  const router = useRouter();
 
   useEffect(() => {
     // Initial load or data sync if needed
