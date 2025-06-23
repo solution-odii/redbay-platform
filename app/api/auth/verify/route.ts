@@ -20,7 +20,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Session expired. Please log in again." }, { status: 401 });
     }
 
-    const apiUrl = `https://redcollection.onrender.com/api/v1/redtech/auth/verify-login-otp?otp=${encodeURIComponent(otp)}`;
+    const apiUrl = `https://redcollection.onrender.com/api/v1/auth/verify-login-otp?otp=${encodeURIComponent(otp)}`;
     console.log("External API URL:", apiUrl);
     const res = await fetch(apiUrl, {
       method: "GET",
