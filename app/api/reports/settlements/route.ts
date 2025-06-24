@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     };
 
     const filteredParams = Object.fromEntries(
-      Object.entries(queryParams).filter(([_, v]) => v !== "")
+      Object.entries(queryParams).filter(([, v]) => v !== "")
     );
     console.log("GET Query Parameters:", filteredParams);
     console.log("GET Query String:", new URLSearchParams(filteredParams).toString());

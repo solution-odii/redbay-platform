@@ -54,7 +54,6 @@ export default function SettlementDetailsModal({
   onClose,
   settlement,
   setSelectedSettlement,
-  currentPage,
   totalElements,
   filters,
 }: SettlementDetailsModalProps) {

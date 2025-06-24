@@ -67,6 +67,7 @@ interface SettlementsResponse {
   };
   error?: string;
   detail?: string;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response?: any;
 }
 
@@ -123,6 +124,7 @@ export function SettlementTable() {
       console.log("API Response:", JSON.stringify(data, null, 2));
 
       if (data.status) {
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedSettlements = data.data.content.map((s: any, index: number) => ({
           sN: data.data.number * 10 + index + 1,
           id: s.id || 0,
@@ -152,7 +154,9 @@ export function SettlementTable() {
         setError(data.detail || data.error || data.message || "Failed to fetch settlements");
         console.error("API Error Details:", data);
       }
-    } catch (error: any) {
+    } 
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
       console.error("Error fetching settlements:", error);
       setError(error.message || "Failed to fetch settlements due to network or server error");
     } finally {
