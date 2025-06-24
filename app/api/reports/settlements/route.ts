@@ -2,40 +2,45 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
+  console.log("Received GET request for /api/v1/reports/settlements");
+  console.log("Raw Request URL:", request.url);
   try {
     const { searchParams } = new URL(request.url);
     const params = Object.fromEntries(searchParams.entries());
 
-    const queryParams = {
-      page: params.page || "0",
-      size: params.size || "10",
-      sortBy: params.sortBy || "timestamp",
-      ascending: params.ascending || "true",
-      sourceAccount: params.sourceAccount || "",
-      destinationAccount: params.destinationAccount || "",
-      transactionRef: params.transactionRef || "",
-      reference: params.reference || "",
-      merchantName: params.merchantName || "",
-      merchantOrgId: params.merchantOrgId || "",
-      startDate: params.startDate || "",
-      endDate: params.endDate || "",
-      status: params.status || "",
-    };
-
-    const cookieStore = await cookies(); // Await the cookies function
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
-    console.log("Retrieved accessToken from cookie:", accessToken);
+    console.log("Retrieved accessToken:", accessToken ? "Present" : "Missing");
 
     if (!accessToken) {
-      console.error("No access token found in cookie");
+      console.error("No access token found");
       return NextResponse.json({ error: "Authorization required" }, { status: 401 });
     }
 
-    const apiUrl = "https://redcollection.onrender.com/api/reports/settlements";
-    console.log("External API URL:", apiUrl);
-    console.log("Outgoing Request Headers:", { Authorization: `Bearer ${accessToken}` });
+    const queryParams = {
+      request: "report", // Try 'request=report'
+      page: (parseInt(params.page) || 0).toString(),
+      size: (parseInt(params.size) || 10).toString(),
+      sortBy: params.sortBy || "createdAt",
+      sortOrder: params.sortOrder || "asc",
+      search: params.search || "",
+      status: params.status || "",
+      startDate: params.startDate || "",
+      endDate: params.endDate || "",
+      merchantOrgId: params.merchantOrgId || "",
+    };
 
-    const res = await fetch(`${apiUrl}?${new URLSearchParams(queryParams).toString()}`, {
+    const filteredParams = Object.fromEntries(
+      Object.entries(queryParams).filter(([_, v]) => v !== "")
+    );
+    console.log("GET Query Parameters:", filteredParams);
+    console.log("GET Query String:", new URLSearchParams(filteredParams).toString());
+
+    const apiUrl = "https://redcollection.onrender.com/api/v1/reports/settlements";
+    const fullUrl = `${apiUrl}?${new URLSearchParams(filteredParams).toString()}`;
+    console.log("External API GET URL:", fullUrl);
+
+    const res = await fetch(fullUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,22 +49,27 @@ export async function GET(request: Request) {
     });
 
     const data = await res.json();
-    console.log("External API Response:", {
+    console.log("External API GET Response:", {
       status: res.status,
+      headers: Object.fromEntries(res.headers.entries()),
       body: JSON.stringify(data, null, 2),
     });
 
     if (res.ok && data.status) {
       return NextResponse.json(data, { status: 200 });
     } else {
-      console.error("External API Error:", data);
+      console.error("External API GET Error:", data);
       return NextResponse.json(
-        { error: data.message || "Failed to fetch settlements" },
+        {
+          error: data.detail || data.message || "Failed to fetch settlement data",
+          status: res.status,
+          response: data,
+        },
         { status: res.status }
       );
     }
   } catch (error) {
-    console.error("Settlements Error:", error);
+    console.error("GET Settlement Error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
